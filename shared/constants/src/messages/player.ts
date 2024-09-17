@@ -2,7 +2,7 @@ import {
   type Quaternion,
   type Vector3,
   type PlayerOptions,
-} from '../../shared/core/src/player'
+} from '../../../core/src/player'
 
 export const PLAYER_MESSAGE = {
   PLAYER_CREATE: 'PLAYER_CREATE',
