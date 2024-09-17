@@ -1,0 +1,14 @@
+{
+  "name": "constants",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/main.ts",
+  "browserslist": {
+    "development": [
+      "last 1 version"
+    ],
+    "production": [
+      "defaults"
+    ]
+  }
+}

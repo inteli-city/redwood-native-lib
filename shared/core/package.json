@@ -1,0 +1,16 @@
+{
+  "name": "core",
+  "version": "0.0.0",
+  "private": true,
+  "browserslist": {
+    "development": [
+      "last 1 version"
+    ],
+    "production": [
+      "defaults"
+    ]
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
+  }
+}
