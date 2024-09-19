@@ -6,7 +6,7 @@ import { BleManager, Device } from 'react-native-ble-plx'
 
 export const useBLE = () => {
   const bleManager = useMemo(() => new BleManager(), [])
-
+  const [isScanning, setIsScanning] = useState(false)
   const [allDevices, setAllDevices] = useState<Device[]>([])
 
   const requestAndroid31Permissions = async () => {
@@ -70,28 +70,58 @@ export const useBLE = () => {
     }
   }
 
-  const scanForPeripherals = () => {
-    console.log('Scanning...')
-    bleManager.startDeviceScan(null, null, (error, device) => {
-      if (error) {
-        console.log(error)
-      }
+  const scanForPeripherals = async () => {
+    if (isScanning) {
+      console.log('is already scanning')
+      return
+    }
+    console.log('scanning...')
 
-      console.log('device found:', device)
+    setAllDevices([])
 
-      if (device && device.name?.includes('2128P')) {
-        setAllDevices((old) => {
-          if (isDuplicateDevice(old, device)) {
-            return old
-          }
-          return [...old, device]
-        })
+    setIsScanning(true)
+
+    // const devices = await bleManager.connectedDevices([
+    //   '00000000-0000-1000-8000-00805F9B34FB',
+    // ])
+
+    // console.log(devices)
+
+    bleManager.startDeviceScan(
+      null,
+      {
+        allowDuplicates: true,
+        scanMode: 0,
+      },
+      (error, device) => {
+        if (error) {
+          console.log(error)
+        }
+
+        if (device && !device.isConnectable) {
+          setAllDevices((old) => {
+            if (isDuplicateDevice(old, device)) {
+              return old
+            }
+
+            console.log(device)
+
+            return [...old, device]
+          })
+        }
       }
-    })
+    )
+  }
+
+  const stopScanForPeripherals = async () => {
+    setIsScanning(false)
+    await bleManager.stopDeviceScan()
   }
 
   return {
+    isScanning,
     scanForPeripherals,
+    stopScanForPeripherals,
     requestPermissions,
     allDevices,
   }

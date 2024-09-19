@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "node": "20.17.0",
       "developmentClient": true,
       "distribution": "internal"
     },
