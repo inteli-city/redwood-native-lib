@@ -1,13 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import * as ExpoDevice from 'expo-device'
 import { PermissionsAndroid, Platform } from 'react-native'
-import { BleManager, Device } from 'react-native-ble-plx'
+import RNBluetoothClassic, {
+  BluetoothDevice,
+} from 'react-native-bluetooth-classic'
 
-export const useBLE = () => {
-  const bleManager = useMemo(() => new BleManager(), [])
+export const useBluetooth = () => {
   const [isScanning, setIsScanning] = useState(false)
-  const [allDevices, setAllDevices] = useState<Device[]>([])
+  const [allDevices, setAllDevices] = useState<BluetoothDevice[]>([])
+  const [pairedDevices, setPairedDevices] = useState<BluetoothDevice[]>([])
 
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
@@ -44,9 +46,6 @@ export const useBLE = () => {
     )
   }
 
-  const isDuplicateDevice = (device: Device[], nextDevice: Device) =>
-    device.findIndex((device) => nextDevice.id === device.id) > -1
-
   const requestPermissions = async () => {
     if (Platform.OS === 'android') {
       if ((ExpoDevice.platformApiLevel ?? -1) < 31) {
@@ -70,52 +69,50 @@ export const useBLE = () => {
     }
   }
 
+  const requestPairedDevices = async () => {
+    const available = await RNBluetoothClassic.isBluetoothAvailable()
+    console.log('available', available)
+    if (!available) return
+
+    const enabled = await RNBluetoothClassic.isBluetoothEnabled()
+    console.log('enabled', enabled)
+
+    if (!enabled) return
+
+    const paired = await RNBluetoothClassic.getBondedDevices()
+
+    setPairedDevices(paired)
+
+    console.log(paired)
+  }
+
   const scanForPeripherals = async () => {
     if (isScanning) {
       console.log('is already scanning')
       return
     }
-    console.log('scanning...')
-
     setAllDevices([])
-
+    console.log('scanning...')
     setIsScanning(true)
 
-    // const devices = await bleManager.connectedDevices([
-    //   '00000000-0000-1000-8000-00805F9B34FB',
-    // ])
+    const unpaired = await RNBluetoothClassic.startDiscovery()
 
-    // console.log(devices)
+    // console.log(unpaired)
 
-    bleManager.startDeviceScan(
-      null,
-      {
-        allowDuplicates: true,
-        scanMode: 0,
-      },
-      (error, device) => {
-        if (error) {
-          console.log(error)
-        }
+    // const pair = await RNBluetoothClassic.pairDevice('94:DE:B8:AD:52:67')
 
-        if (device && !device.isConnectable) {
-          setAllDevices((old) => {
-            if (isDuplicateDevice(old, device)) {
-              return old
-            }
+    // console.log(pair)
 
-            console.log(device)
+    // pair.connect()
 
-            return [...old, device]
-          })
-        }
-      }
-    )
+    setAllDevices(unpaired)
+
+    setIsScanning(false)
   }
 
   const stopScanForPeripherals = async () => {
     setIsScanning(false)
-    await bleManager.stopDeviceScan()
+    // await bleManager.stopDeviceScan()
   }
 
   return {
@@ -123,6 +120,8 @@ export const useBLE = () => {
     scanForPeripherals,
     stopScanForPeripherals,
     requestPermissions,
+    requestPairedDevices,
     allDevices,
+    pairedDevices,
   }
 }

@@ -1,62 +1,90 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { CameraView, useCameraPermissions } from 'expo-camera'
 import { Button, StyleSheet, Text, View } from 'react-native'
+import { BluetoothDevice } from 'react-native-bluetooth-classic'
 
-import { ThemedText } from '@/components/ThemedText'
-// import { useBLE } from '@/hooks/useBLE'
+import { useBluetooth } from '@/hooks/useBLE'
 
 export default function HomeScreen() {
-  // const {
-  //   scanForPeripherals,
-  //   requestPermissions,
-  //   allDevices,
-  //   isScanning,
-  //   stopScanForPeripherals,
-  // } = useBLE()
+  const [connectedDevice, setConnectedDevice] = useState<BluetoothDevice>()
 
-  // const scanForDevices = async () => {
-  //   const isPermissionsEnabled = await requestPermissions()
-  //   if (isPermissionsEnabled) {
-  //     scanForPeripherals()
-  //   }
-  // }
+  const {
+    requestPermissions,
+    allDevices,
+    isScanning,
+    stopScanForPeripherals,
+    scanForPeripherals,
+    pairedDevices,
+    requestPairedDevices,
+  } = useBluetooth()
 
-  const [permission, requestPermission] = useCameraPermissions()
+  const scanForDevices = async () => {
+    const isPermissionsEnabled = await requestPermissions()
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return (
-      <View style={styles.container}>
-        <ThemedText>Camera permission loading</ThemedText>
-      </View>
-    )
+    if (isPermissionsEnabled) {
+      scanForPeripherals()
+    } else {
+      console.log('no permission')
+      return
+    }
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    )
+  const disconnectDevice = (device: BluetoothDevice) => {
+    device.disconnect()
+    setConnectedDevice(undefined)
   }
+
+  const connectDevice = (device: BluetoothDevice) => {
+    device.connect()
+    setConnectedDevice(device)
+  }
+
+  useEffect(() => {
+    requestPairedDevices()
+  }, [])
 
   return (
     <View style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        facing={'back'}
-        barcodeScannerSettings={{
-          barcodeTypes: ['qr'],
-        }}
-        onBarcodeScanned={({ data }) => console.log(data)}
-      >
-        <View style={styles.buttonContainer}></View>
-      </CameraView>
+      <Button
+        title={isScanning ? 'stop Scanning' : 'start Scan'}
+        onPress={isScanning ? stopScanForPeripherals : scanForDevices}
+      />
+      {pairedDevices.map((device) => (
+        <View style={styles.listItem} key={device.id}>
+          <View>
+            <Text>Id: {`${device.id}`}</Text>
+            <Text>Name: {`${device.name}`}</Text>
+            <Text>Address: {`${device.address}`}</Text>
+            <Text>rssi: {`${device.rssi}`}</Text>
+          </View>
+          <Button
+            title={connectedDevice?.id === device.id ? 'disconnect' : 'connect'}
+            onPress={
+              connectedDevice?.id === device.id
+                ? () => disconnectDevice(device)
+                : () => connectDevice(device)
+            }
+          />
+        </View>
+      ))}
+      {/* {allDevices.map((device) => (
+        <View style={styles.listItem} key={device.id}>
+          <View>
+            <Text>Id: {`${device.id}`}</Text>
+            <Text>Name: {`${device.name}`}</Text>
+            <Text>Address: {`${device.address}`}</Text>
+            <Text>rssi: {`${device.rssi}`}</Text>
+          </View>
+          <Button
+            title={connectedDevice === device.id ? 'disconnect' : 'connect'}
+            // onPress={
+            //   connectedDevice === device.id
+            //     ? () => disconnectDevice(device)
+            //     : () => connectDevice(device)
+            // }
+          />
+        </View>
+      ))} */}
     </View>
   )
 }
@@ -64,20 +92,23 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    padding: 16,
   },
+  listItem: {
+    width: '100%',
+    justifyContent: 'space-between',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 32,
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'flex-end',
+  },
+
   message: {
     textAlign: 'center',
     paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
   },
   button: {
     flex: 1,

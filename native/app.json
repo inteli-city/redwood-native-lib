@@ -30,14 +30,6 @@
     "plugins": [
       "expo-router",
       [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
-        }
-      ],
-      [
         "@config-plugins/react-native-ble-plx",
         {
           "isBackgroundEnabled": true,
@@ -46,6 +38,16 @@
             "central"
           ],
           "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
+        }
+      ],
+      ["with-rn-bluetooth-classic",
+        {
+          "peripheralUsageDescription": "Allow $(PRODUCT_NAME) to check bluetooth peripheral info",
+          "alwaysUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
+          "protocols": [
+            "com.myCompany.p1",
+            "com.myCompany.p2"
+          ]
         }
       ]
     ],

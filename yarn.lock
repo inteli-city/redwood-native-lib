@@ -2652,6 +2652,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/config-plugins@npm:^3.0.8":
+  version: 3.1.0
+  resolution: "@expo/config-plugins@npm:3.1.0"
+  dependencies:
+    "@expo/config-types": "npm:^42.0.0"
+    "@expo/json-file": "npm:8.2.33"
+    "@expo/plist": "npm:0.0.14"
+    chalk: "npm:^4.1.2"
+    debug: "npm:^4.3.1"
+    find-up: "npm:~5.0.0"
+    fs-extra: "npm:9.0.0"
+    getenv: "npm:^1.0.0"
+    glob: "npm:7.1.6"
+    resolve-from: "npm:^5.0.0"
+    semver: "npm:^7.3.5"
+    slash: "npm:^3.0.0"
+    xcode: "npm:^3.0.1"
+    xml2js: "npm:^0.4.23"
+  checksum: 10c0/01974433155a842e169f5e52b0ec90698ce7cbad4f8271d89aabfda63759aaa2a15c1b505e8806a23852bdbc3053edefa4232e942162c78abe9d62f9673f4e98
+  languageName: node
+  linkType: hard
+
+"@expo/config-types@npm:^42.0.0":
+  version: 42.0.0
+  resolution: "@expo/config-types@npm:42.0.0"
+  checksum: 10c0/95198d74abfa0f8fd43cb038739e793124b172daedb2125ed38238df91be47601b2fac423b19b76a27a753854e9e3bcd8e04ca2d6317ca5a4813108d4eeb0b90
+  languageName: node
+  linkType: hard
+
 "@expo/config-types@npm:^51.0.0-unreleased":
   version: 51.0.2
   resolution: "@expo/config-types@npm:51.0.2"
@@ -2729,6 +2758,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/json-file@npm:8.2.33":
+  version: 8.2.33
+  resolution: "@expo/json-file@npm:8.2.33"
+  dependencies:
+    "@babel/code-frame": "npm:~7.10.4"
+    json5: "npm:^1.0.1"
+    write-file-atomic: "npm:^2.3.0"
+  checksum: 10c0/9a0f69c83f32ba4e0bbca7d6ba2f1415522bb843b82428d69ffc030c908f46ead556fdfd31f0030bde3bdc82d616d1c560e0552cc2b77e7df0cfa719fb8fb4c8
+  languageName: node
+  linkType: hard
+
 "@expo/json-file@npm:^8.3.0, @expo/json-file@npm:~8.3.0":
   version: 8.3.3
   resolution: "@expo/json-file@npm:8.3.3"
@@ -2802,6 +2842,17 @@ __metadata:
     split: "npm:^1.0.1"
     sudo-prompt: "npm:9.1.1"
   checksum: 10c0/4ec8e550c0a6cbf9b28e9c2b2d884552e0e8f4cee3e553419f829cc9b979c256cb5554a733e3f0575ad61413d4a6614abbd167da36e79601d2963a7b7d467354
+  languageName: node
+  linkType: hard
+
+"@expo/plist@npm:0.0.14":
+  version: 0.0.14
+  resolution: "@expo/plist@npm:0.0.14"
+  dependencies:
+    "@xmldom/xmldom": "npm:~0.7.0"
+    base64-js: "npm:^1.2.3"
+    xmlbuilder: "npm:^14.0.0"
+  checksum: 10c0/faf42e4b412032e575bd1a8ecfe4ec00cd9ed5660f1f21c526190e015a6634db9ea81325100b03c4101d42ee23dcea2f844333e017ef164c5a2331bb40c016af
   languageName: node
   linkType: hard
 
@@ -7562,7 +7613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xmldom/xmldom@npm:~0.7.7":
+"@xmldom/xmldom@npm:~0.7.0, @xmldom/xmldom@npm:~0.7.7":
   version: 0.7.13
   resolution: "@xmldom/xmldom@npm:0.7.13"
   checksum: 10c0/cb02e4e8d986acf18578a5f25d1bce5e18d08718f40d8a0cdd922a4c112c8e00daf94de4e43f9556ed147c696b135f2ab81fa9a2a8a0416f60af15d156b60e40
@@ -11752,17 +11803,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-camera@npm:^15.0.16":
-  version: 15.0.16
-  resolution: "expo-camera@npm:15.0.16"
-  dependencies:
-    invariant: "npm:^2.2.4"
-  peerDependencies:
-    expo: "*"
-  checksum: 10c0/7b963f6ad6d9c43bbf2de8981439dc858c39c39fa808086e18058b0f738ebf67a9433d5c8fcc84ad0fb050103e576b9c11a7113ec165d3fd63835870e1267d5c
-  languageName: node
-  linkType: hard
-
 "expo-constants@npm:~16.0.0, expo-constants@npm:~16.0.2":
   version: 16.0.2
   resolution: "expo-constants@npm:16.0.2"
@@ -15301,7 +15341,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^1.0.2":
+"json5@npm:^1.0.1, json5@npm:^1.0.2":
   version: 1.0.2
   resolution: "json5@npm:1.0.2"
   dependencies:
@@ -16794,7 +16834,6 @@ __metadata:
     "@types/react-native-base64": "npm:^0"
     "@types/react-test-renderer": "npm:^18.0.7"
     expo: "npm:~51.0.28"
-    expo-camera: "npm:^15.0.16"
     expo-constants: "npm:~16.0.2"
     expo-dev-client: "npm:~4.0.26"
     expo-device: "npm:^6.0.2"
@@ -16811,8 +16850,8 @@ __metadata:
     react-dom: "npm:18.2.0"
     react-native: "npm:0.74.5"
     react-native-base64: "npm:^0.2.1"
-    react-native-ble-manager: "npm:^11.5.5"
     react-native-ble-plx: "npm:^3.2.1"
+    react-native-bluetooth-classic: "npm:^1.73.0-rc.12"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-reanimated: "npm:~3.10.1"
     react-native-safe-area-context: "npm:4.10.5"
@@ -16820,6 +16859,7 @@ __metadata:
     react-native-web: "npm:~0.19.10"
     react-test-renderer: "npm:18.2.0"
     typescript: "npm:~5.3.3"
+    with-rn-bluetooth-classic: "npm:^1.0.5"
   languageName: unknown
   linkType: soft
 
@@ -18495,15 +18535,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-ble-manager@npm:^11.5.5":
-  version: 11.5.5
-  resolution: "react-native-ble-manager@npm:11.5.5"
-  peerDependencies:
-    react-native: ">=0.60.0"
-  checksum: 10c0/25ab61326536a46fc7f1b56433d7aa484cdf7a19e8ede583574bf1435a60ec513d9886a35e2c11306b7e56a30fe7a65fc86381838473b7d88e33a7e747e6f5fd
-  languageName: node
-  linkType: hard
-
 "react-native-ble-plx@npm:^3.2.1":
   version: 3.2.1
   resolution: "react-native-ble-plx@npm:3.2.1"
@@ -18514,6 +18545,17 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/04463138444bae9128b7b7b16468f86156bb466c6586a97cc4fc3f6cde40647211e8afb2a713c24cf74c39464ddc535a63899897a5bc4b3d6b4916d100bda68e
+  languageName: node
+  linkType: hard
+
+"react-native-bluetooth-classic@npm:^1.73.0-rc.12":
+  version: 1.73.0-rc.12
+  resolution: "react-native-bluetooth-classic@npm:1.73.0-rc.12"
+  dependencies:
+    buffer: "npm:^6.0.3"
+  peerDependencies:
+    react-native: ">=0.73.1"
+  checksum: 10c0/27a81c0704514ed779bbfc45ffad0dc577410ef1a43e141079b47643b5fbe99e798d195a391453f329ce740d92ff9900d666a4059b931e16d33ca0fcb850545c
   languageName: node
   linkType: hard
 
@@ -22059,6 +22101,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"with-rn-bluetooth-classic@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "with-rn-bluetooth-classic@npm:1.0.5"
+  dependencies:
+    "@expo/config-plugins": "npm:^3.0.8"
+  checksum: 10c0/e9c5bd959ea0f7eba77c571d9051d6544027c351d9959b00686c31bdbcdf56291d11604d334c38fa3ca973378dc424e2577a5b96e4dd595e4ebf45bd375135d4
+  languageName: node
+  linkType: hard
+
 "wonka@npm:^4.0.14":
   version: 4.0.15
   resolution: "wonka@npm:4.0.15"
@@ -22236,6 +22287,16 @@ __metadata:
     sax: "npm:>=0.6.0"
     xmlbuilder: "npm:~11.0.0"
   checksum: 10c0/db1ad659210eda4b77929aa692271308ec7e04830112161b8c707f3bcc7138947409c8461ae5c8bcb36b378d62594a8d1cb78770ff5c3dc46a68c67a0838b486
+  languageName: node
+  linkType: hard
+
+"xml2js@npm:^0.4.23":
+  version: 0.4.23
+  resolution: "xml2js@npm:0.4.23"
+  dependencies:
+    sax: "npm:>=0.6.0"
+    xmlbuilder: "npm:~11.0.0"
+  checksum: 10c0/a3f41c9afc46d5bd0bea4070e5108777b605fd5ce2ebb978a68fd4c75513978ad5939f8135664ffea6f1adb342f391b1ba1584ed7955123b036e9ab8a1d26566
   languageName: node
   linkType: hard
 
