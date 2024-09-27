@@ -1,90 +1,103 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Button, StyleSheet, Text, View } from 'react-native'
-import { BluetoothDevice } from 'react-native-bluetooth-classic'
 
-import { useBluetooth } from '@/hooks/useBLE'
+import { useBluetooth } from '@/hooks/useBluetooth'
 
 export default function HomeScreen() {
-  const [connectedDevice, setConnectedDevice] = useState<BluetoothDevice>()
+  const [tags, setTags] = useState<string[]>([])
+  const [ri, setRI] = useState<string[]>([])
+
+  const clearLists = () => {
+    setRI([])
+    setTags([])
+  }
 
   const {
-    requestPermissions,
-    allDevices,
-    isScanning,
-    stopScanForPeripherals,
-    scanForPeripherals,
     pairedDevices,
+    connectedDevice,
     requestPairedDevices,
-  } = useBluetooth()
+    connectDevice,
+    disconnectCurrentDevice,
+  } = useBluetooth({
+    onDataReceived: (message) => {
+      if (message.data === '\r') return
 
-  const scanForDevices = async () => {
-    const isPermissionsEnabled = await requestPermissions()
+      console.log(message.data)
 
-    if (isPermissionsEnabled) {
-      scanForPeripherals()
-    } else {
-      console.log('no permission')
-      return
-    }
+      const [action, content] = message.data.split(': ')
+
+      switch (action) {
+        case 'EP':
+          setTags((old) => {
+            if (old.includes(content)) return old
+            return [...old, content]
+          })
+          break
+        case 'CS':
+          break
+        case 'RI':
+          setRI((old) => {
+            if (old.includes(content)) return old
+            return [...old, content]
+          })
+          break
+        default:
+          return
+      }
+    },
+  })
+
+  const riSet = Array.from(new Set(ri))
+  const tagsSet = Array.from(new Set(tags))
+
+  const createASCIICommand = (string: string) => {
+    return string + '\n'
   }
 
-  const disconnectDevice = (device: BluetoothDevice) => {
-    device.disconnect()
-    setConnectedDevice(undefined)
-  }
+  const send = async () => {
+    if (!connectedDevice) return
 
-  const connectDevice = (device: BluetoothDevice) => {
-    device.connect()
-    setConnectedDevice(device)
+    await connectedDevice.write(
+      createASCIICommand(
+        `.ft -al on -dt off -ie on -ip on -l hig -r off -sb epc -so 0000 -st op -t1 30 -t2 50 -t3 80 -to on`
+      ),
+      'ascii'
+    )
   }
-
-  useEffect(() => {
-    requestPairedDevices()
-  }, [])
 
   return (
     <View style={styles.container}>
-      <Button
-        title={isScanning ? 'stop Scanning' : 'start Scan'}
-        onPress={isScanning ? stopScanForPeripherals : scanForDevices}
-      />
+      <Button title={'get paired devices'} onPress={requestPairedDevices} />
+      <Button title={'send'} onPress={send} />
       {pairedDevices.map((device) => (
         <View style={styles.listItem} key={device.id}>
           <View>
             <Text>Id: {`${device.id}`}</Text>
             <Text>Name: {`${device.name}`}</Text>
             <Text>Address: {`${device.address}`}</Text>
-            <Text>rssi: {`${device.rssi}`}</Text>
           </View>
           <Button
-            title={connectedDevice?.id === device.id ? 'disconnect' : 'connect'}
+            title={device.id === connectedDevice?.id ? 'disconnect' : 'connect'}
             onPress={
               connectedDevice?.id === device.id
-                ? () => disconnectDevice(device)
+                ? () => disconnectCurrentDevice()
                 : () => connectDevice(device)
             }
           />
         </View>
       ))}
-      {/* {allDevices.map((device) => (
-        <View style={styles.listItem} key={device.id}>
-          <View>
-            <Text>Id: {`${device.id}`}</Text>
-            <Text>Name: {`${device.name}`}</Text>
-            <Text>Address: {`${device.address}`}</Text>
-            <Text>rssi: {`${device.rssi}`}</Text>
-          </View>
-          <Button
-            title={connectedDevice === device.id ? 'disconnect' : 'connect'}
-            // onPress={
-            //   connectedDevice === device.id
-            //     ? () => disconnectDevice(device)
-            //     : () => connectDevice(device)
-            // }
-          />
-        </View>
-      ))} */}
+      <View>
+        <Text>Tags:</Text>
+      </View>
+      <View>
+        {tagsSet.map((tag, index) => (
+          <Text key={tag}>
+            {tag} - {`(RSSI): ${riSet[index]}`}
+          </Text>
+        ))}
+      </View>
+      <Button title={'Limpar'} onPress={clearLists} />
     </View>
   )
 }

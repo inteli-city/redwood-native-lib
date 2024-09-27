@@ -10,6 +10,7 @@
       "distribution": "internal"
     },
     "preview": {
+      "node": "20.17.0",
       "distribution": "internal"
     },
     "production": {

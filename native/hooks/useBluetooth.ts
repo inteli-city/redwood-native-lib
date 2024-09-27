@@ -3,13 +3,20 @@ import { useState } from 'react'
 import * as ExpoDevice from 'expo-device'
 import { PermissionsAndroid, Platform } from 'react-native'
 import RNBluetoothClassic, {
-  BluetoothDevice,
+  type BluetoothDevice,
+  type BluetoothDeviceReadEvent,
+  type BluetoothEventListener,
 } from 'react-native-bluetooth-classic'
 
-export const useBluetooth = () => {
+type UseBluetoothOptions = {
+  onDataReceived?: BluetoothEventListener<BluetoothDeviceReadEvent>
+}
+
+export const useBluetooth = (options: UseBluetoothOptions = {}) => {
   const [isScanning, setIsScanning] = useState(false)
   const [allDevices, setAllDevices] = useState<BluetoothDevice[]>([])
   const [pairedDevices, setPairedDevices] = useState<BluetoothDevice[]>([])
+  const [connectedDevice, setConnectedDevice] = useState<BluetoothDevice>()
 
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
@@ -70,58 +77,106 @@ export const useBluetooth = () => {
   }
 
   const requestPairedDevices = async () => {
+    const isPermissionsEnabled = await requestPermissions()
+
+    if (!isPermissionsEnabled) {
+      console.log('no permission')
+    }
+
     const available = await RNBluetoothClassic.isBluetoothAvailable()
-    console.log('available', available)
-    if (!available) return
+
+    if (!available) {
+      console.log('bluetooth is not available')
+      return
+    }
 
     const enabled = await RNBluetoothClassic.isBluetoothEnabled()
-    console.log('enabled', enabled)
 
-    if (!enabled) return
+    if (!enabled) {
+      console.log('bluetooth is not enabled')
+      return
+    }
 
     const paired = await RNBluetoothClassic.getBondedDevices()
 
-    setPairedDevices(paired)
+    const scannerPaired = paired.filter(({ name }) =>
+      name.toLowerCase().includes('2128p')
+    )
 
-    console.log(paired)
+    setPairedDevices(scannerPaired)
   }
 
   const scanForPeripherals = async () => {
-    if (isScanning) {
-      console.log('is already scanning')
+    const isPermissionsEnabled = await requestPermissions()
+    if (!isPermissionsEnabled) {
+      console.log('no permission')
       return
     }
+
+    if (isScanning) {
+      return
+    }
+
     setAllDevices([])
-    console.log('scanning...')
     setIsScanning(true)
 
-    const unpaired = await RNBluetoothClassic.startDiscovery()
+    const unpairedDevices = await RNBluetoothClassic.startDiscovery()
 
-    // console.log(unpaired)
-
-    // const pair = await RNBluetoothClassic.pairDevice('94:DE:B8:AD:52:67')
-
-    // console.log(pair)
-
-    // pair.connect()
-
-    setAllDevices(unpaired)
-
+    setAllDevices(unpairedDevices)
     setIsScanning(false)
   }
 
   const stopScanForPeripherals = async () => {
+    await RNBluetoothClassic.cancelDiscovery()
     setIsScanning(false)
-    // await bleManager.stopDeviceScan()
+  }
+
+  const connectDevice = async (device: BluetoothDevice) => {
+    if (connectedDevice) {
+      connectedDevice.disconnect()
+    }
+
+    await device.connect()
+
+    if (options?.onDataReceived) {
+      device.onDataReceived(options.onDataReceived)
+    }
+
+    setConnectedDevice(device)
+  }
+
+  const connectDeviceByAddress = async (
+    address: string = '94:DE:B8:AD:52:67'
+  ) => {
+    const isPermissionsEnabled = await requestPermissions()
+
+    if (!isPermissionsEnabled) {
+      console.log('no permission')
+    }
+
+    const pair = await RNBluetoothClassic.pairDevice(address)
+
+    pair.connect()
+  }
+
+  const disconnectCurrentDevice = () => {
+    if (!connectedDevice) return
+
+    connectedDevice.disconnect()
+    setConnectedDevice(undefined)
   }
 
   return {
-    isScanning,
     scanForPeripherals,
     stopScanForPeripherals,
     requestPermissions,
     requestPairedDevices,
+    disconnectCurrentDevice,
+    connectDevice,
+    connectDeviceByAddress,
+    isScanning,
     allDevices,
+    connectedDevice,
     pairedDevices,
   }
 }
