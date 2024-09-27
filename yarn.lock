@@ -19502,6 +19502,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"scanner@workspace:shared/scanner":
+  version: 0.0.0-use.local
+  resolution: "scanner@workspace:shared/scanner"
+  dependencies:
+    uuid: "npm:^10.0.0"
+  languageName: unknown
+  linkType: soft
+
 "scheduler@npm:0.24.0-canary-efb381bbf-20230505":
   version: 0.24.0-canary-efb381bbf-20230505
   resolution: "scheduler@npm:0.24.0-canary-efb381bbf-20230505"
