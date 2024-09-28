@@ -1,3 +1,4 @@
-import { alert } from './commands/alert'
-
-console.log(alert())
+export * from './classes'
+export * from './commands'
+export * from './constants'
+export * from './helpers'

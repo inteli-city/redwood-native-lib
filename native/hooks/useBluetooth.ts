@@ -9,6 +9,7 @@ import RNBluetoothClassic, {
 } from 'react-native-bluetooth-classic'
 
 type UseBluetoothOptions = {
+  onConnectDevice?: (device: BluetoothDevice) => Promise<void>
   onDataReceived?: BluetoothEventListener<BluetoothDeviceReadEvent>
 }
 
@@ -141,6 +142,8 @@ export const useBluetooth = (options: UseBluetoothOptions = {}) => {
     if (options?.onDataReceived) {
       device.onDataReceived(options.onDataReceived)
     }
+
+    options.onConnectDevice?.(device)
 
     setConnectedDevice(device)
   }

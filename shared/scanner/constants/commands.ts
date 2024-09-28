@@ -57,23 +57,14 @@ export type AbortCommand = {
 export type AlertCommand = {
   type: typeof COMMAND_NAME.ALERT
   params: {
-    /** Buzzer on or off @default 'on'*/
     b?: 'on' | 'off'
-    /** Buzzer/Vibrate duration: short, medium, or long @default 'sho' */
     d?: 'sho' | 'med' | 'lon'
-    /** Plays "Find-Me" tune */
     fm?: boolean
-    /** Volume level: low, medium, or high @default 'hig'*/
     l?: 'low' | 'med' | 'hig'
-    /** No action, just set the parameters */
     n?: boolean
-    /** List the current parameter values */
     p?: boolean
-    /** Buzzer tone: low, medium, or high @default 'hig' */
     t?: 'low' | 'med' | 'hig'
-    /**Vibrate on or off @default 'on' */
     v?: 'on' | 'off'
-    /** Reset the parameters to defaults */
     x?: boolean
   }
 }
@@ -84,17 +75,11 @@ export type AlertCommand = {
 export type AutorunCommand = {
   type: typeof COMMAND_NAME.AUTORUN
   params: {
-    /** No action, just list parameters */
-    p?: boolean
-    /** Executes the autorun function */
+    d?: boolean
     ea?: boolean
-    /** Finds and sets the autorun file */
     fi?: 0 | 1
-    /** Reads the autorun file */
     ra?: boolean
-    /** Writes to the autorun file */
     wa?: string
-    /** Resets the parameters */
     x?: boolean
   }
 }
@@ -105,19 +90,12 @@ export type AutorunCommand = {
 export type BarCodeCommand = {
   type: typeof COMMAND_NAME.BARCODE
   params: {
-    /** Perform an alert after reading the barcode */
     al?: 'on' | 'off'
-    /** Date time response included */
     dt?: 'on' | 'off'
-    /** EPC response included */
     e?: 'on' | 'off'
-    /** No action, just set the parameters */
     n?: boolean
-    /** List the current parameter values */
     p?: boolean
-    /** Timeout in seconds (1-9) */
     t?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-    /** Reset parameters */
     x?: boolean
   }
 }
@@ -128,7 +106,6 @@ export type BarCodeCommand = {
 export type BatteryLevelCommand = {
   type: typeof COMMAND_NAME.BATTERY_LEVEL
   params: {
-    /** Include battery health in the response */
     bh?: boolean
   }
 }
@@ -139,51 +116,31 @@ export type BatteryLevelCommand = {
 export type BlockPermalockTransponderCommand = {
   type: typeof COMMAND_NAME.BLOCK_PERMALOCK_TRANSPONDER
   params: {
-    /** Perform an alert (tone/beep) after operation */
     al?: 'on' | 'off'
-    /** Access password (8 character ASCII Hex) */
     ap?: string
-    /** Include checksum in EPC response */
     c?: 'on' | 'off'
-    /** Date/time response included */
+    dm?: string
+    dl?: string
+    do?: string
     dt?: 'on' | 'off'
-    /** EPC response included */
     e?: 'on' | 'off'
-    /** Inventory only without select phase */
     io?: 'on' | 'off'
-    /** Index response with each transponder */
     ix?: 'on' | 'off'
-    /** Memory bank mode: read or write */
     m?: 'rd' | 'wr'
-    /** No action, just set the parameters */
     n?: boolean
-    /** Output power in dBm (4-30) */
     o?: number
-    /** List current parameter values */
     p?: boolean
-    /** Query select: all, nsl, or sl */
     ql?: 'all' | 'nsl' | 'sl'
-    /** Query session: s0, s1, s2, or s3 */
     qs?: 's0' | 's1' | 's2' | 's3'
-    /** Query target: a or b */
     qt?: 'a' | 'b'
-    /** Q value for fixed query (0-15) */
     qv?: number
-    /** RSSI response included */
     r?: 'on' | 'off'
-    /** Select action */
     sa?: number
-    /** Select memory bank: epc, tid, or usr */
     sb?: 'epc' | 'tid' | 'usr'
-    /** Select mask data in ASCII Hex pairs */
     sd?: string
-    /** Length of the select mask (in bits) */
     sl?: string
-    /** Offset to start the select mask */
     so?: string
-    /** Query select target: s0, s1, s2, s3, or sl */
     st?: 's0' | 's1' | 's2' | 's3' | 'sl'
-    /** Reset the parameters */
     x?: boolean
   }
 }
@@ -280,43 +237,43 @@ export type FactoryDefaultsCommand = {
 export type FindTagCommand = {
   type: typeof COMMAND_NAME.FIND_TAG
   params: {
-    /** Perform an alert (tone or beep) when tag is found */
+    /** Perform an alert (tone or beep) when tag is found. @default 'on' */
     al?: 'on' | 'off'
-    /** Include date time response */
+    /** Include date/time response. @default 'off' */
     dt?: 'on' | 'off'
-    /** Include the EPC response */
+    /** Include the EPC response. @default 'on' */
     ie?: 'on' | 'off'
-    /** Include the transponder RSSI as a percentage of min/max */
+    /** Include transponder RSSI as a percentage of min/max. @default 'on' */
     ip?: 'on' | 'off'
-    /** Volume level */
+    /** Volume level for the alert tone. Options: low, med, hig. @default 'hig' */
     l?: 'low' | 'med' | 'hig'
-    /** No action, just set the parameters */
+    /** No action, just set the parameters. */
     n?: boolean
-    /** Output power in dBm (4 to 30) */
+    /** Output power in dBm (range: 4 to 30). @default 30 */
     o?: number
-    /** List the parameter and their current values */
+    /** List current parameter values. */
     p?: boolean
-    /** Include transponder RSSI response */
+    /** Include transponder RSSI response. @default 'off' */
     r?: 'on' | 'off'
-    /** Bank to use for the select mask */
+    /** Bank to use for the select mask. Options: epc, tid, usr. @default 'epc' */
     sb?: 'epc' | 'tid' | 'usr'
-    /** Select mask data in 2 character ASCII Hex pairs */
+    /** Select mask data in 2-character ASCII hex pairs. */
     sd?: string
-    /** Length in bits of the select mask */
+    /** Length of the select mask in bits. */
     sl?: string
-    /** Number of bits from the start of the block to the start of the select mask */
+    /** Offset for the select mask. */
     so?: string
-    /** Arm (start) or Disarm (stop) findtag by trigger */
+    /** Arm or disarm find tag using the trigger. Options: art (arm), op (disarm). */
     st?: 'art' | 'op'
-    /** Sound percentage threshold 1 */
+    /** Sound percentage threshold 1 for beeps and tone. Range: 0 to 90. */
     t1?: number
-    /** Sound percentage threshold 2 */
+    /** Sound percentage threshold 2 for beeps only. Range: 0 to 90. */
     t2?: number
-    /** Sound percentage threshold 3 */
+    /** Sound percentage threshold 3 for beeps only. Range: 0 to 90. */
     t3?: number
-    /** Variable tone frequency or variable beep speed */
+    /** Variable tone frequency or variable beep speed. @default 'on' */
     to?: 'on' | 'off'
-    /** Reset the parameters to defaults */
+    /** Reset the parameters to defaults. */
     x?: boolean
   }
 }
@@ -432,6 +389,8 @@ export type InventoryCommand = {
     io?: 'on' | 'off'
     /** Index number each transponder response */
     ix?: 'on' | 'off'
+    /**  */
+    n?: boolean
     /** Output power in dBm (10 to 29) */
     o?: number
     /** List the parameter and their current values */
@@ -598,8 +557,10 @@ export type MountMemoryCommand = {
 export type PushSwitchDoublePressCommand = {
   type: typeof COMMAND_NAME.PUSH_SWITCH_DOUBLE_PRESS
   params: {
-    /** Action ID for double press */
-    s?: string
+    n?: boolean
+    p?: boolean
+    t?: number
+    x?: boolean
   }
 }
 
@@ -609,8 +570,10 @@ export type PushSwitchDoublePressCommand = {
 export type PushSwitchSinglePressCommand = {
   type: typeof COMMAND_NAME.PUSH_SWITCH_SINGLE_PRESS
   params: {
-    /** Action ID for single press */
-    s?: string
+    n?: boolean
+    p?: boolean
+    t?: number
+    x?: boolean
   }
 }
 
@@ -699,15 +662,21 @@ export type ReadLogCommand = {
 export type SwitchActionCommand = {
   type: typeof COMMAND_NAME.SWITCH_ACTION
   params: {
-    /** Action to perform when the switch is pressed */
-    a?: string
-    /** Action to perform when the switch is released */
-    r?: string
-    /** No action, just set the parameters */
-    n?: boolean
-    /** List the current parameter values */
+    /** Turn asynchronous switch status reporting on or off. @default 'off' */
+    a?: 'on' | 'off'
+    /** Set the double press switch action. @default 'ad' */
+    d?: string
+    /** Turn haptic feedback on or off. @default 'off' */
+    h?: 'on' | 'off'
+    /** Sets the delay before the switch double press action is repeated when held. Value between 1 and 999 ms. @default 100 */
+    rd?: number
+    /** Sets the delay before the switch single press action is repeated when held. Value between 1 and 999 ms. @default 100 */
+    rs?: number
+    /** Set the single press switch action. @default 'ad' */
+    s?: 'off' | 'rd' | 'wr' | 'inv' | 'bar' | 'usr' | 'ad'
+    /** List the current parameter values. */
     p?: boolean
-    /** Reset the parameters to defaults */
+    /** Reset the parameters to defaults. */
     x?: boolean
   }
 }
@@ -869,14 +838,8 @@ export type TransponderSelectCommand = {
 /**
  * Retrieves version information about the device and firmware.
  */
-export type VersionCommand = {
+export type VersionInformationCommand = {
   type: typeof COMMAND_NAME.VERSION
-  params: {
-    /** Lists the current version of the hardware, firmware, and application */
-    p?: boolean
-    /** Resets the version-related parameters to defaults */
-    x?: boolean
-  }
 }
 /**
  * Deprecated. Writes commands to the autorun file on the device.
@@ -1029,7 +992,7 @@ export type SensorCommand =
   | SleepTimeoutCommand
   | TimeCommand
   | TransponderSelectCommand
-  | VersionCommand
+  | VersionInformationCommand
   | WriteAutoRunCommand
   | WriteTransponderCommand
   | WriteSingleTransponderCommand

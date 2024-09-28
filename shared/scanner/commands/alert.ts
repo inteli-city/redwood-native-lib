@@ -31,14 +31,14 @@ export function alert(params: AlertCommandParams = {}) {
     d: params.buzzerDuration,
     fm: params.playTune,
     l: params.volumeLevel,
-    n: params.noAction,
-    p: params.listParams,
+    n: ScannerHelper.booleanParameter(params.noAction),
+    p: ScannerHelper.booleanParameter(params.listParams),
     t: params.buzzerTone,
     v: params.vibrate,
-    x: params.resetToDefault,
+    x: ScannerHelper.booleanParameter(params.resetToDefault),
   }
 
   return ScannerHelper.createASCIICommand(
-    `${COMMAND_NAME.ALERT} ${ScannerHelper.parseParamsToText(alertParams)}\n`
+    `${COMMAND_NAME.ALERT} ${ScannerHelper.parseParamsToText(alertParams)}`
   )
 }
